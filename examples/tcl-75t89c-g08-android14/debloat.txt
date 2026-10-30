@@ -1,0 +1,63 @@
+# TCL 75T89C (75", model "Smart TV Pro", device G08, G08_4K_GB, MediaTek tcl9618), India
+# Android 14 (Google TV), firmware UTT2.250416.001 AU02, security patch 2025-12-05. About 2.4 GB RAM.
+# Same G08 board as examples/tcl-g08-us-google-tv and examples/tcl-g08-eu-android12, on the India build
+# (no US streaming preloads; ships TCL Channel, TCL Live free channels and a TCL account service).
+#
+# Tested 30 October 2026 on one set, about one day of use. Disabled by hand with `pm disable-user --user 0`,
+# one call each, in batches with a screenshot between them. The first 26 packages were reboot-checked
+# (pm list packages -d compared before and after, identical). The last three content apps, the stock
+# launcher and the setup wizard went in around the reboot and have been through one. Not weeks of use.
+#
+# Apply:   TV_HOST=<tv ip> tools/disable.sh examples/tcl-75t89c-g08-android14/debloat.txt
+# Undo:    TV_HOST=<tv ip> tools/restore.sh examples/tcl-75t89c-g08-android14/debloat.txt com.google.android.apps.tv.launcherx
+# Everything is DISABLED, not uninstalled. Comment out any line you want to keep.
+#
+# Stock launcher: com.google.android.apps.tv.launcherx. Live TV / HDMI app: com.tcl.tv.
+# Left enabled on purpose: com.tcl.tv, com.tcl.tvinput, com.tcl.suspension (Source key panel), com.tcl.interactive,
+# com.tcl.ttvs (same TIAS chain), com.tcl.autopair, com.tcl.systemserver, com.tcl.globalkeyoverlay,
+# com.tcl.UpdatePeripheral and the firmware update service, com.google.android.katniss (voice), mediashell
+# (Chromecast), AirPlay and Miracast, Netflix, YouTube, Play Store and Play Services, com.mediatek.* audio and
+# display services, com.dolby.*, com.google.android.tts, com.tcl.guard, com.tcl.eva, com.tcl.smartalexa.
+
+# TCL promo, push messages, help and demo
+com.tcl.dashboard                      # home-screen push messages and the TCL tab on stock Home
+com.tcl.exhibit                        # store demo mode
+com.tcl.esticker                       # retail-demo sticker
+com.tcl.hotelmenu                      # hotel-mode portal
+com.tcl.ocean.instructions             # on-TV manual / tips overlay
+com.tcl.repairguide
+com.tcl.logkit                         # log capture
+com.tcl.hearaid
+com.tcl.t_solo
+com.tcl.messagebox                     # TCL pushed messages and promos
+com.tcl.magiconnectfree                # MagicConnect pairing promo
+
+# TCL content apps (feed the TCL tab on stock Home; nothing else uses them)
+com.tcl.channelplus                    # TCL Live free channels
+com.tcl.waterfall.overseas             # TCL Channel recommendation browser
+com.tcl.usercenter                     # TCL account sign-in
+
+# Android 14 ad, privacy and feedback services
+com.android.adservices.api             # Privacy Sandbox
+com.android.ondevicepersonalization.services
+com.android.federatedcompute.services
+com.google.android.feedback
+com.android.tv.feedbackconsent
+
+# Duplicate webviews (com.google.android.webview stays the active one) and extras
+com.tcl.android.webview
+com.mediatek.support.webview
+com.mediatek.backgrounddetection
+com.android.printspooler
+com.google.android.syncadapters.calendar
+com.google.android.onetimeinitializer
+com.google.android.play.games
+
+# Ambient / photo screensaver (Google TV). Re-enabled once to try Google Photos, then off again by choice
+com.google.android.apps.tv.dreamx
+
+# Home takeover for launcher/. The saved Wi-Fi network belonged to setupwraith: forget it and re-join it in
+# Settings first (dumpsys wifi | grep -o 'cname=[^ ]*' must name com.android.tv.settings), or disabling
+# the wizard deletes the network and ADB goes with it.
+com.google.android.apps.tv.launcherx   # stock Google TV home
+com.google.android.tungsten.setupwraith  # setup wizard; its RecoveryActivity takes Home when launcherx is off
